@@ -1,0 +1,50 @@
+﻿@page "/categories"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using pd_workademy_blazorServerApp.Domain.Entities;
+@using pd_workademy_blazorServerApp.Pages.Categories.Modals;
+@inject IDialogService DialogService
+@inject CategoryViewStore categoryViewStore
+
+<h1>Categories table</h1>
+<MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Success">
+    Add New Category
+</MudButton>
+@if (_categories.Count == 0)
+{
+    <h1>No Categories found.</h1>
+}
+else
+{
+    <MudTable Items="@_categories" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Delete</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Id</MudTd>
+            <MudTd>@context.Name</MudTd>
+            <MudTd><MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="(e)=>OpenConfirmationDeleteModal(context.Id)">Delete</MudButton></MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+@code {
+    private List<Category> _categories = new();
+    private bool _loading;
+    DialogOptions options = new() { CloseOnEscapeKey = true };
+    protected override async Task OnInitializedAsync()
+    {
+        _categories = await categoryViewStore.GetCategoriesStoreAsync();
+    }
+    private void OpenDialog()
+    {
+        DialogService.Show<AddCategoryModal>("Add New Category", options);
+    }
+    private void OpenConfirmationDeleteModal(Guid guid)
+    {
+        Category category= _categories.FirstOrDefault(x => x.Id == guid);
+        var parameters = new DialogParameters { ["Category"] = category };
+        DialogService.Show<ConfirmationDeleteCategoryModal>("Delete Category", parameters, options);
+    }
+}

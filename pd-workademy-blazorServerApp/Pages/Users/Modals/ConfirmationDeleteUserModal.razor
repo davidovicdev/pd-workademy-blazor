@@ -1,0 +1,27 @@
+﻿@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using Domain.Entities;
+@using System.Text.Json;
+@using pd_workademy_blazorServerApp.Pages.Users.DTOs;
+@inject HttpClient Http
+<MudDialog>
+    <DialogContent>
+       Are you sure you want to delete @User.FirstName @User.LastName ? 
+       <br />
+       You will delete all of his Todo items !
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="SubmitAsync">Delete</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public User User { get; set; } = new();
+    async void SubmitAsync()
+    {
+        await Http.DeleteAsync($"https://localhost:7045/User?guid={User.Id}");
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+    void Cancel() => MudDialog.Cancel();
+}

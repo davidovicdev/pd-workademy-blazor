@@ -1,0 +1,53 @@
+﻿@page "/users"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using pd_workademy_blazorServerApp.Domain.Entities;
+@using pd_workademy_blazorServerApp.Pages.Users;
+@using pd_workademy_blazorServerApp.Pages.Users.Modals;
+@inject IDialogService DialogService
+@inject UserViewStore userViewStore
+<h1>Users table</h1>
+<MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Success">
+    Add New User
+</MudButton>
+@if (_users.Count == 0)
+{
+    <h1>No Users found.</h1>
+}
+else
+{
+    <MudTable Items="@_users" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>Id</MudTh>
+            <MudTh>First Name</MudTh>
+            <MudTh>Last Name</MudTh>
+            <MudTh>Delete</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Id</MudTd>
+            <MudTd>@context.FirstName</MudTd>
+            <MudTd>@context.LastName</MudTd>
+            <MudTd><MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="(e)=>OpenConfirmationDeleteModal(context.Id)">Delete</MudButton></MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+@code {
+    private List<User> _users = new();
+    private bool _loading;
+    DialogOptions options = new(){ CloseOnEscapeKey = true };
+    protected override async Task OnInitializedAsync()
+    {
+        _users = await userViewStore.GetUsersStoreAsync();
+    }
+    private void OpenDialog()
+    {
+        DialogService.Show<AddUserModal>("Add New User", options);
+    }
+    private void OpenConfirmationDeleteModal(Guid guid)
+    {
+        User user = _users.FirstOrDefault(x => x.Id == guid);
+        var parameters = new DialogParameters { ["User"] = user};
+        DialogService.Show<ConfirmationDeleteUserModal>("Delete User", parameters, options);
+    }
+
+}

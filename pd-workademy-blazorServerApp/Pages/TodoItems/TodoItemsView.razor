@@ -1,0 +1,74 @@
+﻿@page "/todoitems"
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@using pd_workademy_blazorServerApp.Domain.Entities;
+@using pd_workademy_blazorServerApp.Pages.Categories;
+@using pd_workademy_blazorServerApp.Pages.TodoItems.Modals;
+@using pd_workademy_blazorServerApp.Pages.Users;
+@inject IDialogService DialogService
+@inject TodoItemViewStore todoItemViewStore
+@inject UserViewStore userViewStore
+@inject CategoryViewStore categoryViewStore
+
+<h1>Todo Items table</h1>
+<MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Success">
+    Add New Todo Item
+</MudButton>
+@if(_todoItems.Count == 0)
+{
+    <h1>No Todo Items found.</h1>
+}
+else{
+    <MudTable Items="@_todoItems" Hover="true" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Title</MudTh>
+        <MudTh>Description</MudTh>
+        <MudTh>Category</MudTh>
+        <MudTh>User</MudTh>
+            <MudTh>Is Finished</MudTh>
+            <MudTh>Edit</MudTh>
+            <MudTh>Delete</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Id</MudTd>
+        <MudTd>@context.Title</MudTd>
+        <MudTd>@context.Description</MudTd>
+        <MudTd>@context.Category.Name</MudTd>
+        <MudTd>@context.User.FirstName @context.User.LastName</MudTd>
+        <MudTd>@context.IsDone</MudTd>
+            <MudTd><MudButton Variant="Variant.Filled" Color="Color.Warning" @onclick="(e)=>OpenEditModal(context)">Edit</MudButton></MudTd>
+            <MudTd><MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="(e)=>OpenConfirmationDeleteModal(context)">Delete</MudButton></MudTd>
+    </RowTemplate>
+</MudTable>
+}
+@code {
+    private List<TodoItem> _todoItems = new();
+    private List<Category> _categories= new();
+    private List<User> _users = new();
+    private bool _loading;
+    DialogOptions options = new() { CloseOnEscapeKey = true };
+    protected override async Task OnInitializedAsync()
+    {
+        _todoItems = await todoItemViewStore.GetTodoItemsStoreAsync();
+        _categories= await categoryViewStore.GetCategoriesStoreAsync();
+        _users = await userViewStore.GetUsersStoreAsync();
+    }
+    private void OpenDialog()
+    {
+        var parameters = new DialogParameters { ["Categories"] = _categories , ["Users"] = _users };
+        DialogService.Show<AddTodoItemModal>("Add New Todo Item", parameters, options);
+    }
+    private void OpenConfirmationDeleteModal(TodoItem todoItem)
+    {
+        var parameters = new DialogParameters { ["TodoItem"] = todoItem};
+        DialogService.Show<ConfirmationDeleteTodoItemModal>("Delete Todo Item", parameters, options);
+    }
+    private void OpenEditModal(TodoItem todoItem)
+    {
+        var parameters = new DialogParameters { ["TodoItem"] = todoItem, ["Categories"] = _categories, ["Users"] = _users };
+        DialogService.Show<EditTodoItemModal>("Edit Todo Item", parameters, options);
+
+    }
+
+}

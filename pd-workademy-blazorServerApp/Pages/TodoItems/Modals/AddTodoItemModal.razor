@@ -1,0 +1,58 @@
+﻿@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using Domain.Entities;
+@using System.Text.Json;
+@using pd_workademy_blazorServerApp.Pages.TodoItems.DTOs;
+@inject HttpClient http
+@inject TodoItemViewStore todoItemViewStore
+<MudDialog>
+    <DialogContent>
+        <MudForm @ref="form">
+            <div style="min-width: 300px">
+
+                <MudTextField T="string" @bind-Value="_title" Label="Todo Item Name" Required="true" RequiredError="Todo Item Name is required!" />
+                <MudTextField T="string" @bind-Value="_description" Label="Todo Item Description" Required="false" />
+                <MudSelect T="string" Label="Choose Category" AnchorOrigin="Origin.BottomCenter" @bind-Value="_categoryGuid" Required="true" RequiredError="Todo Item Name is required!">
+                    @foreach (var category in Categories)
+                    {
+                        <MudSelectItem Value="@category.Id.ToString()">@category.Name</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudSelect T="string" Label="Choose User" AnchorOrigin="Origin.BottomCenter" @bind-Value="_userGuid">
+
+                    @foreach (var user in Users)
+                    {
+                        <MudSelectItem Value="@user.Id.ToString()">@user.FirstName @user.LastName</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="SubmitAsync">Add</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    MudForm? form;
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public List<User> Users { get; set; } = new();
+    [Parameter] public List<Category> Categories { get; set; } = new();
+    private string _title;
+    private string _description;
+    private string _categoryGuid;
+    private string _userGuid;
+    protected override void OnInitialized()
+    {
+        _categoryGuid = Categories.First().Id.ToString();
+        _userGuid = Users.First().Id.ToString();
+    }
+    async Task SubmitAsync()
+    {
+        //Validate
+        AddTodoItemDTO todoItem = new(_title, _description, Guid.Parse(_categoryGuid), Guid.Parse(_userGuid));
+        todoItemViewStore.AddTodoItemStoreAsync(todoItem);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+    void Cancel() => MudDialog.Cancel();
+}

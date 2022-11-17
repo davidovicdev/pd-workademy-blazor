@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\pd-workademy-blazorServerApp.props" />
+</Project>

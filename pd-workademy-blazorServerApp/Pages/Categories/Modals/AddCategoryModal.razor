@@ -1,0 +1,32 @@
+﻿@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using Domain.Entities;
+@using System.Text.Json;
+@using pd_workademy_blazorServerApp.Pages.Categories.DTOs;
+@inject CategoryViewStore categoryViewStore
+
+<MudDialog>
+    <DialogContent>
+            <MudForm @ref="form">
+                <MudTextField T="string" @bind-Value="_categoryName" Label="Category Name" Required="true" RequiredError="Category Name is required!" />
+                <div class="d-flex align-center justify-space-between">
+                </div>
+            </MudForm>
+    </DialogContent>
+    <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" OnClick="SubmitAsync">Add</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    MudForm form;
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    private string _categoryName; 
+    async void SubmitAsync()
+    {
+        AddCategoryDTO categoryToAdd = new(_categoryName);
+        categoryViewStore.AddCategoryStoreAsync(categoryToAdd);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+    void Cancel() => MudDialog.Cancel();
+}

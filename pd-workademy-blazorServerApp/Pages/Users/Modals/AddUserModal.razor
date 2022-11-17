@@ -1,0 +1,33 @@
+﻿@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using Domain.Entities;
+@using System.Text.Json;
+@using pd_workademy_blazorServerApp.Pages.Users.DTOs;
+@inject HttpClient Http
+<MudDialog>
+    <DialogContent>
+            <MudForm @ref="form">
+                <div class="d-flex align-center justify-space-between">
+                <MudTextField T="string" @bind-Value="_firstName" Label="First Name" Required="true" RequiredError="First Name is required!" />
+                <MudTextField T="string" @bind-Value="_lastName" Label="Last Name" Required="true" RequiredError="Last Name is required!" />
+                </div>
+            </MudForm>
+    </DialogContent>
+    <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" OnClick="SubmitAsync">Add</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    MudForm? form;
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    private string _firstName;
+    private string _lastName;
+    async void SubmitAsync()
+    {
+        AddUserDTO userToAdd = new(_firstName, _lastName);
+        await Http.PostAsJsonAsync("https://localhost:7045/User", userToAdd);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+    void Cancel() => MudDialog.Cancel();
+}
