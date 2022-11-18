@@ -1,18 +1,13 @@
-﻿using pd_workademy_blazorServerApp.Domain.Entities;
-using pd_workademy_blazorServerApp.Pages.Categories.DTOs;
+﻿using pd_workademy_blazorServerApp.Pages.Categories.DTOs;
 
 namespace pd_workademy_blazorServerApp.Pages.Categories
 {
-    public class CategoryViewService
+    public class CategoryService
     {
         private readonly HttpClient _http;
-        public CategoryViewService(HttpClient http)
+        public CategoryService(HttpClient http)
         {
             _http = http;
-        }
-        public async Task<List<Category>> GetCategoriesServiceAsync()
-        {
-            return await _http.GetFromJsonAsync<List<Category>>("https://localhost:7045/Categories");
         }
         public async Task AddCategoryServiceAsync(AddCategoryDTO category)
         {

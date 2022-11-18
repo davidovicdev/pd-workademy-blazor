@@ -3,7 +3,7 @@
 @using Domain.Entities;
 @using System.Text.Json;
 @using pd_workademy_blazorServerApp.Pages.Users.DTOs;
-@inject HttpClient Http
+@inject UserStore userStore
 <MudDialog>
     <DialogContent>
        Are you sure you want to delete @User.FirstName @User.LastName ? 
@@ -20,7 +20,7 @@
     [Parameter] public User User { get; set; } = new();
     async void SubmitAsync()
     {
-        await Http.DeleteAsync($"https://localhost:7045/User?guid={User.Id}");
+        await userStore.DeleteUserStoreAsync(User.Id);
         MudDialog.Close(DialogResult.Ok(true));
     }
     void Cancel() => MudDialog.Cancel();

@@ -3,7 +3,7 @@
 @using Domain.Entities;
 @using System.Text.Json;
 @using pd_workademy_blazorServerApp.Pages.Users.DTOs;
-@inject HttpClient Http
+@inject TodoItemStore todoItemStore
 <MudDialog>
     <DialogContent>
         Are you sure you want to delete @TodoItem.Title ?
@@ -18,7 +18,7 @@
     [Parameter] public TodoItem TodoItem { get; set; } = new();
     async void SubmitAsync()
     {
-        await Http.DeleteAsync($"https://localhost:7045/TodoItem?guid={TodoItem.Id}");
+        await todoItemStore.DeleteTodoItemStoreAsync(TodoItem.Id);
         MudDialog.Close(DialogResult.Ok(true));
     }
     void Cancel() => MudDialog.Cancel();

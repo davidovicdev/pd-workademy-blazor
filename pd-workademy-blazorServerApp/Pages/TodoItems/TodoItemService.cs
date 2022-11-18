@@ -3,11 +3,11 @@ using pd_workademy_blazorServerApp.Pages.TodoItems.DTOs;
 
 namespace pd_workademy_blazorServerApp.Pages.TodoItems
 {
-    public class TodoItemViewService
+    public class TodoItemService
     {
         private readonly HttpClient _http;
 
-        public TodoItemViewService(HttpClient http)
+        public TodoItemService(HttpClient http)
         {
             _http = http;
         }

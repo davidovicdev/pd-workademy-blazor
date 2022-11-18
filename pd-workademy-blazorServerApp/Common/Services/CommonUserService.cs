@@ -1,11 +1,12 @@
 ﻿using pd_workademy_blazorServerApp.Domain.Entities;
-namespace pd_workademy_blazorServerApp.Pages.Users
+
+namespace pd_workademy_blazorServerApp.Common.Services
 {
-    public class UserViewService
+    public class CommonUserService
     {
         private readonly HttpClient _http;
 
-        public UserViewService(HttpClient http)
+        public CommonUserService(HttpClient http)
         {
             _http = http;
         }

@@ -1,4 +1,5 @@
 using MudBlazor.Services;
+using pd_workademy_blazorServerApp.Common.Services;
 using pd_workademy_blazorServerApp.Data;
 using pd_workademy_blazorServerApp.Pages.Categories;
 using pd_workademy_blazorServerApp.Pages.TodoItems;
@@ -16,12 +17,14 @@ internal class Program
         builder.Services.AddSingleton<WeatherForecastService>();
         builder.Services.AddHttpClient();
         builder.Services.AddMudServices();
-        builder.Services.AddScoped<CategoryViewStore>();
-        builder.Services.AddScoped<CategoryViewService>();
-        builder.Services.AddScoped<UserViewService>();
-        builder.Services.AddScoped<UserViewStore>();
-        builder.Services.AddScoped<TodoItemViewStore>();
-        builder.Services.AddScoped<TodoItemViewService>();
+        builder.Services.AddScoped<CategoryStore>();
+        builder.Services.AddScoped<CategoryService>();
+        builder.Services.AddScoped<UserService>();
+        builder.Services.AddScoped<UserStore>();
+        builder.Services.AddScoped<TodoItemStore>();
+        builder.Services.AddScoped<TodoItemService>();
+        builder.Services.AddScoped<CommonCategoryService>();
+        builder.Services.AddScoped<CommonUserService>();
 
         var app = builder.Build();
 

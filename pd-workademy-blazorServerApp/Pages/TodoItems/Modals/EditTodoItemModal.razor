@@ -3,8 +3,7 @@
 @using Domain.Entities;
 @using System.Text.Json;
 @using pd_workademy_blazorServerApp.Pages.TodoItems.DTOs;
-@inject HttpClient http
-@inject TodoItemViewStore todoItemViewStore
+@inject TodoItemStore todoItemStore
 <MudDialog>
     <DialogContent>
         <MudForm @ref="form">
@@ -51,7 +50,7 @@
     async Task SubmitAsync()
     {
         EditTodoItemDTO todoItem = new(TodoItem.Id, TodoItem.Title, TodoItem.Description, TodoItem.IsDone, Guid.Parse(_categoryGuid), Guid.Parse(_userGuid));
-        todoItemViewStore.EditTodoItemStoreAsync(todoItem);
+        await todoItemStore.EditTodoItemStoreAsync(todoItem);
         MudDialog.Close(DialogResult.Ok(true));
     }
     void Cancel() => MudDialog.Cancel();

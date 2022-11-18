@@ -6,9 +6,7 @@
 @using pd_workademy_blazorServerApp.Pages.TodoItems.Modals;
 @using pd_workademy_blazorServerApp.Pages.Users;
 @inject IDialogService DialogService
-@inject TodoItemViewStore todoItemViewStore
-@inject UserViewStore userViewStore
-@inject CategoryViewStore categoryViewStore
+@inject TodoItemStore todoItemStore
 
 <h1>Todo Items table</h1>
 <MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Success">
@@ -50,9 +48,9 @@ else{
     DialogOptions options = new() { CloseOnEscapeKey = true };
     protected override async Task OnInitializedAsync()
     {
-        _todoItems = await todoItemViewStore.GetTodoItemsStoreAsync();
-        _categories= await categoryViewStore.GetCategoriesStoreAsync();
-        _users = await userViewStore.GetUsersStoreAsync();
+        _todoItems = await todoItemStore.GetTodoItemsStoreAsync();
+        _categories = await todoItemStore.GetCategoriesFromCommonServiceAsync();
+        _users = await todoItemStore.GetUsersFromCommonServiceAsync();
     }
     private void OpenDialog()
     {

@@ -3,7 +3,7 @@
 @using Domain.Entities;
 @using System.Text.Json;
 @using pd_workademy_blazorServerApp.Pages.Categories.DTOs;
-@inject CategoryViewStore categoryViewStore
+@inject CategoryStore categoryStore
 
 <MudDialog>
     <DialogContent>
@@ -19,13 +19,13 @@
     </DialogActions>
 </MudDialog>
 @code {
-    MudForm form;
+    MudForm? form;
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     private string _categoryName; 
     async void SubmitAsync()
     {
         AddCategoryDTO categoryToAdd = new(_categoryName);
-        categoryViewStore.AddCategoryStoreAsync(categoryToAdd);
+        await categoryStore.AddCategoryStoreAsync(categoryToAdd);
         MudDialog.Close(DialogResult.Ok(true));
     }
     void Cancel() => MudDialog.Cancel();

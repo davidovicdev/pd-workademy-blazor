@@ -3,8 +3,7 @@
 @using Domain.Entities;
 @using System.Text.Json;
 @using pd_workademy_blazorServerApp.Pages.Users.DTOs;
-@inject HttpClient Http
-@inject CategoryViewStore categoryViewStore
+@inject CategoryStore categoryStore
 <MudDialog>
     <DialogContent>
        Are you sure you want to delete @Category.Name ? 
@@ -21,7 +20,7 @@
     [Parameter] public Category Category{ get; set; } = new();
     async void SubmitAsync()
     {
-        categoryViewStore.DeleteCategoryStoreAsync(Category.Id);
+        await categoryStore.DeleteCategoryStoreAsync(Category.Id);
         MudDialog.Close(DialogResult.Ok(true));
     }
     void Cancel() => MudDialog.Cancel();

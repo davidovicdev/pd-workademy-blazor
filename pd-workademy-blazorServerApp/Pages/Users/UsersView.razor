@@ -5,7 +5,7 @@
 @using pd_workademy_blazorServerApp.Pages.Users;
 @using pd_workademy_blazorServerApp.Pages.Users.Modals;
 @inject IDialogService DialogService
-@inject UserViewStore userViewStore
+@inject UserStore userStore
 <h1>Users table</h1>
 <MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Success">
     Add New User
@@ -37,7 +37,7 @@ else
     DialogOptions options = new(){ CloseOnEscapeKey = true };
     protected override async Task OnInitializedAsync()
     {
-        _users = await userViewStore.GetUsersStoreAsync();
+        _users = await userStore.GetUsersStoreAsync();
     }
     private void OpenDialog()
     {
@@ -45,7 +45,7 @@ else
     }
     private void OpenConfirmationDeleteModal(Guid guid)
     {
-        User user = _users.FirstOrDefault(x => x.Id == guid);
+        User? user = _users.FirstOrDefault(x => x.Id == guid);
         var parameters = new DialogParameters { ["User"] = user};
         DialogService.Show<ConfirmationDeleteUserModal>("Delete User", parameters, options);
     }
