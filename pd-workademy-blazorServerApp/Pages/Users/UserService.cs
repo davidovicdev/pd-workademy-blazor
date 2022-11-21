@@ -12,11 +12,11 @@ namespace pd_workademy_blazorServerApp.Pages.Users
 
         public async Task AddUserServiceAsync(AddUserDTO user)
         {
-            await _http.PostAsJsonAsync("https://localhost:7045/User", user);
+            await _http.PostAsJsonAsync("/User", user);
         }
         public async Task DeleteUserServiceAsync(Guid guid)
         {
-            await _http.DeleteAsync($"https://localhost:7045/User?guid={guid}");
+            await _http.DeleteAsync($"/User?guid={guid}");
         }
     }
 }

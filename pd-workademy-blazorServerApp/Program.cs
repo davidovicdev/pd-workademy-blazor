@@ -1,6 +1,5 @@
 using MudBlazor.Services;
 using pd_workademy_blazorServerApp.Common.Services;
-using pd_workademy_blazorServerApp.Data;
 using pd_workademy_blazorServerApp.Pages.Categories;
 using pd_workademy_blazorServerApp.Pages.TodoItems;
 using pd_workademy_blazorServerApp.Pages.Users;
@@ -14,8 +13,11 @@ internal class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
-        builder.Services.AddSingleton<WeatherForecastService>();
-        builder.Services.AddHttpClient();
+        builder.Services.AddScoped(sp =>
+        new HttpClient
+        {
+            BaseAddress = new Uri("http://localhost:7331////////////////")
+        });
         builder.Services.AddMudServices();
         builder.Services.AddScoped<CategoryStore>();
         builder.Services.AddScoped<CategoryService>();
@@ -27,7 +29,6 @@ internal class Program
         builder.Services.AddScoped<CommonUserService>();
 
         var app = builder.Build();
-
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
@@ -35,16 +36,11 @@ internal class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
-
         app.UseHttpsRedirection();
-
         app.UseStaticFiles();
-
         app.UseRouting();
-
         app.MapBlazorHub();
         app.MapFallbackToPage("/_Host");
-
         app.Run();
     }
 }

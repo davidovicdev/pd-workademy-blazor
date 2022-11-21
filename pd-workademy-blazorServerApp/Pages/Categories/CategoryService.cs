@@ -11,11 +11,11 @@ namespace pd_workademy_blazorServerApp.Pages.Categories
         }
         public async Task AddCategoryServiceAsync(AddCategoryDTO category)
         {
-            await _http.PostAsJsonAsync("https://localhost:7045/Category", category);
+            await _http.PostAsJsonAsync("/Category", category);
         }
         public async Task DeleteCategoryServiceAsync(Guid guid)
         {
-            await _http.DeleteAsync($"https://localhost:7045/Category?guid={guid}");
+            await _http.DeleteAsync($"/Category?guid={guid}");
 
         }
     }

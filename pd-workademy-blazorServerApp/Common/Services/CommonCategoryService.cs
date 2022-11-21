@@ -12,7 +12,7 @@ namespace pd_workademy_blazorServerApp.Common.Services
         }
         public async Task<List<Category>> GetCategoriesServiceAsync()
         {
-            return await _http.GetFromJsonAsync<List<Category>>("https://localhost:7045/Categories");
+            return await _http.GetFromJsonAsync<List<Category>>("/Categories");
         }
     }
 }

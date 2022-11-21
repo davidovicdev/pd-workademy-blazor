@@ -12,7 +12,7 @@ namespace pd_workademy_blazorServerApp.Common.Services
         }
         public async Task<List<User>> GetUsersServiceAsync()
         {
-            return await _http.GetFromJsonAsync<List<User>>("https://localhost:7045/Users");
+            return await _http.GetFromJsonAsync<List<User>>("/Users");
         }
     }
 }
